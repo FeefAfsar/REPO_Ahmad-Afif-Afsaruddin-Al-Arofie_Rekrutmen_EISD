@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\LokasiParkir;
 use Illuminate\Http\Request;
 
 class LokasiParkirController extends Controller
@@ -11,7 +11,8 @@ class LokasiParkirController extends Controller
      */
     public function index()
     {
-        //
+        $lokasi = LokasiParkir::all();
+        return view('lokasi.index', compact('lokasi'));
     }
 
     /**
@@ -19,7 +20,8 @@ class LokasiParkirController extends Controller
      */
     public function create()
     {
-        //
+        //Nampilin halaman form
+        return view('lokasi.create');
     }
 
     /**
@@ -27,7 +29,13 @@ class LokasiParkirController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Nyimpen data ke database
+        LokasiParkir::create([
+            'nama_tempat' => $request->nama_tempat,
+            'alamat' => $request->alamat
+        ]);
+        //return ke tampilan daftar lokasi
+        return redirect('/lokasi-parkir');
     }
 
     /**
@@ -43,7 +51,9 @@ class LokasiParkirController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        //Cari data berdasarkan Id, lalu ngirim ke view form edit
+        $lokasi = LokasiParkir::findOrFail($id);
+        return view('lokasi.edit', compact('lokasi'));
     }
 
     /**
@@ -51,7 +61,13 @@ class LokasiParkirController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //Cari data lama, lalu ditimpa sama data baru dari form
+        $lokasi = LokasiParkir::findOrFail($id);
+        $lokasi -> update([
+            'nama_tempat' => $request->nama_tempat,
+            'alamat' => $request->alamat
+        ]);
+        return redirect('/lokasi-parkir');
     }
 
     /**
@@ -59,6 +75,11 @@ class LokasiParkirController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        //cari data berdasarkan Id, lalu delete
+        $lokasi = LokasiParkir::findOrFail($id);
+        $lokasi -> delete();
+
+        //redirect halaman table
+        return redirect('/lokasi-parkir');
     }
 }
