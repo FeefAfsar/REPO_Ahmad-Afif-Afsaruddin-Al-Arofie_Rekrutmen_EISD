@@ -29,4 +29,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function laporans()
+    {
+        return $this->hasMany(Laporan::class);
+    }
+
+    public function lokasiParkirs()
+    {
+        return $this->belongsToMany(LokasiParkir::class, 'jukir_lokasi', 'user_id', 'lokasi_parkir_id')
+                    ->withPivot('shift')
+                    ->withTimestamps();
+    }
 }
