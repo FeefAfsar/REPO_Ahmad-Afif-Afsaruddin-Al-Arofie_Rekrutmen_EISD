@@ -3,62 +3,71 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Laporan;
+use App\Models\LokasiParkir;
 
 class LaporanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $laporan = Laporan::all();
+        return view('laporan.index', compact('laporan'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $lokasi = LokasiParkir::all();
+        return view('laporan.create', compact('lokasi'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_lokasi' => 'required',
+            'deskripsi' => 'required',
+        ]);
+
+        \App\Models\Laporan::create([
+            'nama_lokasi' => $request->nama_lokasi,
+            'deskripsi' => $request->deskripsi,
+            'status' => 'PENDING',
+            'user_id' => auth()->id(), // <-- KUNCI UTAMANYA DI SINI
+        ]);
+
+        return redirect('/laporan')->with('success', 'Laporan berhasil dikirim!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Laporan $laporan)
     {
-        //
+        // Gembok keamanan: Hanya admin yang boleh mengakses halaman edit/verifikasi
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized action. Hanya Admin yang dapat memverifikasi laporan.');
+        }
+
+        return view('laporan.edit', compact('laporan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Laporan $laporan)
     {
-        //
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Logika update status laporan yang sudah ada...
+        $request->validate([
+            'status' => 'required|string'
+        ]);
+
+        $laporan->update([
+            'status' => $request->status
+        ]);
+
+        return redirect()->route('laporan.index')->with('success', 'Status laporan berhasil diperbarui oleh Admin.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        Laporan::findOrFail($id)->delete();
+        return redirect('/laporan');
     }
 }

@@ -40,4 +40,8 @@ class User extends Authenticatable
                     ->withPivot('shift')
                     ->withTimestamps();
     }
+    public function lokasi_Parkirs()
+    {
+        return $this->belongsToMany(LokasiParkir::class, 'jukir_lokasi', 'user_id', 'lokasi_parkir_id')->withPivot('shift');
+    }
 }

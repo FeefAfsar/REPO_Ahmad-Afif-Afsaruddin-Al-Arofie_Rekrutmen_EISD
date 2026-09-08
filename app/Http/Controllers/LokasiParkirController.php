@@ -11,8 +11,13 @@ class LokasiParkirController extends Controller
      */
     public function index()
     {
-        $lokasi = LokasiParkir::all();
-        return view('lokasi.index', compact('lokasi'));
+        // Hanya Admin yang boleh kelola lokasi
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak. Halaman ini khusus Administrator.');
+        }
+
+        $lokasis = LokasiParkir::all();
+        return view('lokasi.index', compact('lokasis'));
     }
 
     /**
