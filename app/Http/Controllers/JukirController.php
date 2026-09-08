@@ -3,12 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Penugasan;
 
 class JukirController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    public function jadwal()
+    {
+        $penugasans = Penugasan::with('lokasi')
+                    ->where('user_id', auth()->id())
+                    ->get();
+
+    return view('jukir.jadwal', compact('penugasans'));
+    }
+
     public function index()
     {
         //

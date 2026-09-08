@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'role', 'status_retribusi'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -27,8 +27,10 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'status_retribusi' => 'boolean',
         ];
     }
+
     public function laporans()
     {
         return $this->hasMany(Laporan::class);
@@ -40,8 +42,10 @@ class User extends Authenticatable
                     ->withPivot('shift')
                     ->withTimestamps();
     }
+
+    // Alias untuk menjaga kompatibilitas pemanggilan lama jika ada yang menggunakan format snake_case
     public function lokasi_Parkirs()
     {
-        return $this->belongsToMany(LokasiParkir::class, 'jukir_lokasi', 'user_id', 'lokasi_parkir_id')->withPivot('shift');
+        return $this->lokasiParkirs();
     }
 }

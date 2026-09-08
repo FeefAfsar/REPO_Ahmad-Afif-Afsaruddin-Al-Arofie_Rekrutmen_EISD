@@ -1,0 +1,52 @@
+/* =================================================imal
+   TITIPKEUN - Custom Design System & Styling
+   ==================================================== */
+
+/* Background Gradient Khas TitipKeun */
+.bg-titipkeun-dark {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%);
+}
+
+/* Glassmorphism Effect */
+.titipkeun-glass {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Kartu Digital Pas (E-Card Style) */
+.titipkeun-card-active {
+    background: linear-gradient(135deg, #065f46 0%, #0f766e 50%, #0f172a 100%);
+    box-shadow: 0 20px 25px -5px rgba(6, 95, 70, 0.25), 0 10px 10px -5px rgba(6, 95, 70, 0.1);
+}
+
+.titipkeun-card-inactive {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.3);
+}
+
+/* Styling Tombol Khas */
+.btn-titipkeun-primary {
+    background-color: #059669;
+    color: #ffffff;
+    font-weight: 800;
+    border-radius: 1rem;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.2);
+}
+
+.btn-titipkeun-primary:hover {
+    background-color: #047857;
+    transform: translateY(-1px);
+}
+
+/* Penyesuaian Tabel Modern */
+.titipkeun-table-header {
+    background-color: #f8fafc;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #94a3b8;
+    font-weight: 900;
+}

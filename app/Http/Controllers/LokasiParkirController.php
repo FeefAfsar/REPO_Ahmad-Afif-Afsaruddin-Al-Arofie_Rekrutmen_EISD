@@ -12,6 +12,7 @@ class LokasiParkirController extends Controller
     public function index()
     {
         // Hanya Admin yang boleh kelola lokasi
+        $lokasis = \App\Models\LokasiParkir::all();
         if (auth()->user()->role !== 'admin') {
             abort(403, 'Akses ditolak. Halaman ini khusus Administrator.');
         }

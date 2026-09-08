@@ -5,6 +5,25 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LokasiParkirController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\Penugasan_Controller;
+use App\Models\User;
+use App\Models\Laporan;
+use App\Http\Controllers\PenugasanController;
+use App\Http\Controllers\JukirController;
+
+Route::get('/admin/dashboard', function () {
+    $user = auth()->user();
+    
+    // Keamanan: Pastikan hanya admin yang bisa akses
+    if ($user->role !== 'admin') {
+        abort(403, 'Akses ditolak. Halaman ini khusus Admin.');
+    }
+
+    $totalWarga = User::where('role', 'user')->count();
+    $totalJukir = User::where('role', 'jukir')->count();
+    $totalLaporan = Laporan::count(); 
+
+    return view('admin.dashboard', compact('totalWarga', 'totalJukir', 'totalLaporan'));
+})->middleware(['auth']);
 
 // Halaman Utama Publik - Langsung lempar ke login jika belum auth
 Route::get('/', function () {
@@ -41,8 +60,9 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::resource('lokasi-parkir', LokasiParkirController::class);
     
-    Route::get('/penugasan', [Penugasan_Controller::class, 'index']);
-    Route::post('/penugasan', [Penugasan_Controller::class, 'store']);
+    Route::get('/penugasan', [PenugasanController::class, 'index']);
+    Route::get('/penugasan/create', [PenugasanController::class, 'create']);
+    Route::post('/penugasan', [PenugasanController::class, 'store']);
 });
 
 // ROUTE KHUSUS JUKIR
@@ -78,5 +98,10 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->back()->with('success', 'Status Bebas Parkir berhasil diaktifkan!');
     });
 });
+
+Route::get('/penugasan/create', [PenugasanController::class, 'create']);
+Route::post('/penugasan', [PenugasanController::class, 'store']);
+Route::get('/jadwal-jukir', [JukirController::class, 'jadwal'])->middleware(['auth']);
+Route::delete('/penugasan/{id}', [PenugasanController::class, 'destroy']);
 
 require __DIR__.'/auth.php';

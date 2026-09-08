@@ -5,7 +5,21 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    @php
+                        // Menentukan URL tujuan berdasarkan role user yang sedang login
+                        $dashboardUrl = '/';
+                        if(auth()->check()) {
+                            if(auth()->user()->role === 'admin') {
+                                $dashboardUrl = url('/admin/dashboard');
+                            } elseif(auth()->user()->role === 'jukir') {
+                                $dashboardUrl = url('/jadwal-jukir'); // Sesuaikan dengan route jukir kamu jika berbeda
+                            } else {
+                                $dashboardUrl = url('/warga/dashboard');
+                            }
+                        }
+                    @endphp
+
+                    <a href="{{ $dashboardUrl }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
